@@ -160,7 +160,7 @@
     font-weight: 600;
   }
   label .hint{ font-weight: 400; color: #92a397; }
-  input[type="text"], textarea{
+  input[type="text"], textarea, select{
     font-family: inherit;
     font-size: 13.5px;
     padding: 9px 10px;
@@ -170,11 +170,43 @@
     color: var(--text);
     outline: none;
   }
-  input[type="text"]:focus, textarea:focus{
+  select{ cursor: pointer; }
+  input[type="text"]:focus, textarea:focus, select:focus{
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.15);
   }
   textarea{ resize: vertical; min-height: 40px; }
+  .custom-input{ margin-top: 2px; }
+  .en-tag{
+    font-size: 11px;
+    color: #92a397;
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .chips{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip{
+    font-family: inherit;
+    font-size: 12.5px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--primary-light);
+    background: #fff;
+    color: var(--primary-dark);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+  .chip:hover{ background: var(--surface-soft); }
+  .chip.selected{
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    font-weight: 600;
+  }
 
   pre#jsonPreview{
     background: #26332b;
@@ -226,7 +258,7 @@
 
 <header>
   <h1>🌿 Конструктор промптов</h1>
-  <p>Заполните структуру сцены — получите готовый JSON-промпт для генерации изображений</p>
+  <p>Выбирайте варианты на русском — в экспорт автоматически уйдёт готовый промпт на английском</p>
 </header>
 
 <div class="layout">
@@ -240,187 +272,13 @@
         <button class="btn-danger" id="clearBtn" type="button">Очистить всё</button>
       </div>
     </div>
-    <div class="panel-body" id="formRoot">
-
-      <details class="section" open>
-        <summary>Сцена — общие параметры</summary>
-        <div class="section-body">
-          <div class="field-grid">
-            <div class="field">
-              <label>Тип сцены</label>
-              <input type="text" id="type" placeholder="например: realistic painting">
-            </div>
-            <div class="field">
-              <label>Стиль <span class="hint">(через запятую)</span></label>
-              <input type="text" id="style" placeholder="impressionistic, fine art realism">
-            </div>
-            <div class="field full">
-              <label>Настроение <span class="hint">(через запятую)</span></label>
-              <input type="text" id="mood" placeholder="serene, reflective, warm afternoon atmosphere">
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="section">
-        <summary>Композиция</summary>
-        <div class="section-body">
-          <div class="field-grid">
-            <div class="field">
-              <label>Кадрирование (framing)</label>
-              <input type="text" id="comp_framing" placeholder="full figure in balanced composition">
-            </div>
-            <div class="field">
-              <label>Положение объекта</label>
-              <input type="text" id="comp_position" placeholder="left side of the image">
-            </div>
-            <div class="field full">
-              <label>Место действия (setting)</label>
-              <input type="text" id="comp_setting" placeholder="stone stairway illuminated by gentle sunlight">
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="section">
-        <summary>Субъект / персонаж</summary>
-        <div class="section-body">
-          <div class="field-grid">
-            <div class="field">
-              <label>Категория</label>
-              <input type="text" id="subj_category" placeholder="adult woman">
-            </div>
-            <div class="field">
-              <label>Поза</label>
-              <input type="text" id="subj_posture" placeholder="seated in a relaxed, natural pose">
-            </div>
-
-            <div class="field">
-              <label>Волосы — цвет</label>
-              <input type="text" id="hair_color" placeholder="dark brown">
-            </div>
-            <div class="field">
-              <label>Волосы — длина</label>
-              <input type="text" id="hair_length" placeholder="long">
-            </div>
-            <div class="field">
-              <label>Волосы — текстура</label>
-              <input type="text" id="hair_texture" placeholder="slightly wavy">
-            </div>
-            <div class="field">
-              <label>Волосы — освещение</label>
-              <input type="text" id="hair_lighting" placeholder="subtle rim light">
-            </div>
-
-            <div class="field">
-              <label>Тон кожи</label>
-              <input type="text" id="skin_tone" placeholder="fair and softly lit">
-            </div>
-            <div class="field">
-              <label>Выражение лица</label>
-              <input type="text" id="expression" placeholder="calm, thoughtful">
-            </div>
-
-            <div class="field">
-              <label>Одежда — образ (outfit)</label>
-              <input type="text" id="outfit" placeholder="light beige dress">
-            </div>
-            <div class="field">
-              <label>Одежда — материал</label>
-              <input type="text" id="material" placeholder="thin fabric with natural texture">
-            </div>
-            <div class="field full">
-              <label>Одежда — дизайн</label>
-              <input type="text" id="design" placeholder="simple, everyday style">
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="section">
-        <summary>Окружение и освещение</summary>
-        <div class="section-body">
-          <div class="field-grid">
-            <div class="field">
-              <label>Источник света</label>
-              <input type="text" id="light_source" placeholder="natural sunlight">
-            </div>
-            <div class="field">
-              <label>Цветовая температура</label>
-              <input type="text" id="light_temp" placeholder="warm golden hue">
-            </div>
-            <div class="field">
-              <label>Время суток</label>
-              <input type="text" id="time_of_day" placeholder="late afternoon">
-            </div>
-            <div class="field">
-              <label>Детали света <span class="hint">(через запятую)</span></label>
-              <input type="text" id="light_details" placeholder="soft rim lighting, gentle gradients of shadow">
-            </div>
-
-            <div class="field">
-              <label>Фон — структура</label>
-              <input type="text" id="bg_structure" placeholder="textured stone steps">
-            </div>
-            <div class="field">
-              <label>Фон — глубина</label>
-              <input type="text" id="bg_depth" placeholder="gradual fade into background light">
-            </div>
-            <div class="field full">
-              <label>Фон — оттенки <span class="hint">(через запятую)</span></label>
-              <input type="text" id="bg_tones" placeholder="beige, warm gray, soft tan">
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="section">
-        <summary>Художественный стиль</summary>
-        <div class="section-body">
-          <div class="field-grid">
-            <div class="field">
-              <label>Техника мазка (brushwork)</label>
-              <input type="text" id="brushwork" placeholder="impressionistic, soft transitions">
-            </div>
-            <div class="field">
-              <label>Материал (medium)</label>
-              <input type="text" id="medium" placeholder="oil on canvas">
-            </div>
-            <div class="field">
-              <label>Фокус</label>
-              <input type="text" id="focus" placeholder="interaction of light and atmosphere">
-            </div>
-            <div class="field">
-              <label>Палитра <span class="hint">(через запятую)</span></label>
-              <input type="text" id="palette" placeholder="muted gold, warm earth tones">
-            </div>
-          </div>
-        </div>
-      </details>
-
-      <details class="section">
-        <summary>Атмосфера</summary>
-        <div class="section-body">
-          <div class="field-grid">
-            <div class="field">
-              <label>Тональность</label>
-              <input type="text" id="atm_tone" placeholder="peaceful observation">
-            </div>
-            <div class="field">
-              <label>Замысел (intent)</label>
-              <input type="text" id="atm_intent" placeholder="capture">
-            </div>
-          </div>
-        </div>
-      </details>
-
-    </div>
+    <div class="panel-body" id="formRoot"></div>
   </div>
 
   <!-- ПРАВАЯ ПАНЕЛЬ: ПРЕВЬЮ И ЭКСПОРТ -->
   <div class="panel sticky-actions">
     <div class="panel-header">
-      <h2>Предпросмотр JSON</h2>
+      <h2>Предпросмотр JSON (EN)</h2>
       <span class="badge">.txt экспорт</span>
     </div>
     <div class="panel-body">
@@ -439,84 +297,410 @@
 <footer>Промпт формируется в реальном времени и сохраняется в браузере, пока вы работаете</footer>
 
 <script>
-  const STORAGE_KEY = "prompt_maker_draft_v1";
+  const STORAGE_KEY = "prompt_maker_draft_v2";
+  const CUSTOM_VALUE = "__custom__";
 
-  const fieldIds = [
-    "type","style","mood",
-    "comp_framing","comp_position","comp_setting",
-    "subj_category","subj_posture",
-    "hair_color","hair_length","hair_texture","hair_lighting",
-    "skin_tone","expression",
-    "outfit","material","design",
-    "light_source","light_temp","time_of_day","light_details",
-    "bg_structure","bg_depth","bg_tones",
-    "brushwork","medium","focus","palette",
-    "atm_tone","atm_intent"
+  // ---------- Словари: [русский вариант, английское значение] ----------
+  const OPT = {
+    type: [
+      ["Реалистичная картина", "realistic painting"],
+      ["Фотореалистичное фото", "photorealistic photograph"],
+      ["Цифровая иллюстрация", "digital illustration"],
+      ["Концепт-арт", "concept art"],
+      ["Акварельная живопись", "watercolor painting"],
+      ["Аниме-иллюстрация", "anime illustration"],
+      ["Чёрно-белая фотография", "black and white photograph"]
+    ],
+    style: [
+      ["Импрессионизм", "impressionistic"],
+      ["Мягкая цветовая палитра", "soft color palette"],
+      ["Изящный реализм", "fine art realism"],
+      ["Минимализм", "minimalist"],
+      ["Кинематографичность", "cinematic"],
+      ["Гиперреализм", "hyperrealistic"],
+      ["Сюрреализм", "surrealistic"],
+      ["Винтажный стиль", "vintage style"]
+    ],
+    mood: [
+      ["Умиротворённое", "serene"],
+      ["Задумчивое", "reflective"],
+      ["Тёплая атмосфера дня", "warm afternoon atmosphere"],
+      ["Романтичное", "romantic"],
+      ["Меланхоличное", "melancholic"],
+      ["Драматичное", "dramatic"],
+      ["Таинственное", "mysterious"],
+      ["Радостное", "joyful"]
+    ],
+    comp_framing: [
+      ["Фигура целиком, сбалансированная композиция", "full figure in balanced composition"],
+      ["Крупный портретный план", "close-up portrait"],
+      ["Погрудный план", "medium shot, waist-up"],
+      ["Широкий общий план", "wide establishing shot"],
+      ["Вид с высоты птичьего полёта", "bird's-eye view"]
+    ],
+    comp_position: [
+      ["Слева на изображении", "left side of the image"],
+      ["Справа на изображении", "right side of the image"],
+      ["По центру", "centered in the image"],
+      ["На заднем плане", "in the background"]
+    ],
+    comp_setting: [
+      ["Каменная лестница в мягком солнечном свете", "stone stairway illuminated by gentle sunlight"],
+      ["Городская улица на закате", "city street at sunset"],
+      ["Лесная тропа", "forest path"],
+      ["Морской берег", "seaside shore"],
+      ["Уютная комната у окна", "cozy room by the window"],
+      ["Городская крыша ночью", "city rooftop at night"]
+    ],
+    subj_category: [
+      ["Взрослая женщина", "adult woman"],
+      ["Взрослый мужчина", "adult man"],
+      ["Молодая девушка", "young girl"],
+      ["Пожилой человек", "elderly person"],
+      ["Ребёнок", "child"]
+    ],
+    subj_posture: [
+      ["Сидит в расслабленной естественной позе", "seated in a relaxed, natural pose with feet resting on the step"],
+      ["Стоит уверенно", "standing confidently"],
+      ["Идёт неспешно", "walking leisurely"],
+      ["Облокотившись на перила", "leaning against a railing"]
+    ],
+    hair_color: [
+      ["Тёмно-каштановые", "dark brown"],
+      ["Чёрные", "black"],
+      ["Русые", "light brown"],
+      ["Светлые (блонд)", "blonde"],
+      ["Рыжие", "red/ginger"],
+      ["Седые", "gray/silver"]
+    ],
+    hair_length: [
+      ["Длинные", "long"],
+      ["Средней длины", "medium length"],
+      ["Короткие", "short"]
+    ],
+    hair_texture: [
+      ["Слегка волнистые", "slightly wavy"],
+      ["Прямые", "straight"],
+      ["Кудрявые", "curly"],
+      ["Волнистые", "wavy"]
+    ],
+    hair_lighting: [
+      ["Мягкий контровый свет", "subtle rim light"],
+      ["Яркий контровый свет", "strong rim light"],
+      ["Рассеянный свет", "diffused light"]
+    ],
+    skin_tone: [
+      ["Светлая, мягко освещённая", "fair and softly lit"],
+      ["Смуглая", "tanned skin"],
+      ["Оливковая", "olive skin tone"],
+      ["Тёмная", "dark skin tone"]
+    ],
+    expression: [
+      ["Спокойное, задумчивое", "calm, thoughtful"],
+      ["Улыбающееся", "smiling"],
+      ["Серьёзное", "serious"],
+      ["Мечтательное", "dreamy"]
+    ],
+    outfit: [
+      ["Лёгкое бежевое платье", "light beige dress"],
+      ["Повседневная одежда", "casual everyday clothing"],
+      ["Элегантный костюм", "elegant suit"],
+      ["Летнее платье", "summer dress"]
+    ],
+    material: [
+      ["Тонкая ткань с естественной текстурой", "thin fabric with natural texture"],
+      ["Хлопок", "cotton fabric"],
+      ["Шёлк", "silk fabric"],
+      ["Лён", "linen fabric"]
+    ],
+    design: [
+      ["Простой повседневный стиль", "simple, everyday style"],
+      ["Элегантный стиль", "elegant style"],
+      ["Богемный стиль", "bohemian style"]
+    ],
+    light_source: [
+      ["Естественный солнечный свет", "natural sunlight"],
+      ["Искусственное освещение", "artificial lighting"],
+      ["Свет свечи", "candlelight"],
+      ["Лунный свет", "moonlight"]
+    ],
+    light_temp: [
+      ["Тёплый золотистый оттенок", "warm golden hue"],
+      ["Холодный синеватый оттенок", "cool bluish hue"],
+      ["Нейтральный дневной свет", "neutral daylight"]
+    ],
+    time_of_day: [
+      ["Позднее послеобеденное время", "late afternoon"],
+      ["Рассвет", "sunrise"],
+      ["Полдень", "midday"],
+      ["Закат", "sunset"],
+      ["Ночь", "night"]
+    ],
+    light_details: [
+      ["Мягкий контровый свет", "soft rim lighting"],
+      ["Плавные градиенты тени", "gentle gradients of shadow"],
+      ["Световые блики", "light flares"],
+      ["Лёгкая дымка", "soft haze"]
+    ],
+    bg_structure: [
+      ["Текстурные каменные ступени", "textured stone steps"],
+      ["Кирпичная стена", "brick wall"],
+      ["Деревянный забор", "wooden fence"],
+      ["Городской пейзаж", "urban cityscape"]
+    ],
+    bg_depth: [
+      ["Плавное растворение в свете фона", "gradual fade into background light"],
+      ["Сильное размытие фона (боке)", "strong background blur (bokeh)"],
+      ["Чёткий, детализированный фон", "sharply defined background"]
+    ],
+    bg_tones: [
+      ["Бежевый", "beige"],
+      ["Тёплый серый", "warm gray"],
+      ["Мягкий песочный", "soft tan"],
+      ["Тёмно-зелёный", "deep green"],
+      ["Пастельно-голубой", "pastel blue"]
+    ],
+    brushwork: [
+      ["Импрессионистичные, мягкие переходы", "impressionistic, soft transitions"],
+      ["Чёткие, детализированные мазки", "sharp detailed brushstrokes"],
+      ["Экспрессивные широкие мазки", "expressive broad strokes"]
+    ],
+    medium: [
+      ["Масло на холсте", "oil on canvas"],
+      ["Акварель на бумаге", "watercolor on paper"],
+      ["Цифровая живопись", "digital painting"],
+      ["Пастель на бумаге", "pastel on paper"]
+    ],
+    focus: [
+      ["Взаимодействие света и атмосферы", "interaction of light and atmosphere"],
+      ["Эмоциональное выражение персонажа", "emotional expression of the subject"],
+      ["Детали текстуры", "texture details"]
+    ],
+    palette: [
+      ["Приглушённое золото", "muted gold"],
+      ["Тёплые земляные тона", "warm earth tones"],
+      ["Мягкие бежевые блики", "soft beige highlights"],
+      ["Холодные синие тона", "cool blue tones"],
+      ["Насыщенные красные акценты", "rich red accents"]
+    ],
+    atm_tone: [
+      ["Спокойное наблюдение", "peaceful observation"],
+      ["Напряжённое ожидание", "tense anticipation"],
+      ["Ностальгическое настроение", "nostalgic feeling"]
+    ],
+    atm_intent: [
+      ["Запечатлеть момент", "capture"],
+      ["Рассказать историю", "narrate a story"],
+      ["Вызвать эмоцию", "evoke emotion"]
+    ]
+  };
+
+  // ---------- Конфигурация секций и полей ----------
+  const SECTIONS = [
+    { title: "Сцена — общие параметры", open: true, fields: [
+      { id: "type", label: "Тип сцены", kind: "select" },
+      { id: "style", label: "Стиль", kind: "chips" },
+      { id: "mood", label: "Настроение", kind: "chips", full: true }
+    ]},
+    { title: "Композиция", fields: [
+      { id: "comp_framing", label: "Кадрирование" },
+      { id: "comp_position", label: "Положение объекта" },
+      { id: "comp_setting", label: "Место действия", kind: "select", full: true }
+    ]},
+    { title: "Субъект / персонаж", fields: [
+      { id: "subj_category", label: "Категория" },
+      { id: "subj_posture", label: "Поза" },
+      { id: "hair_color", label: "Волосы — цвет" },
+      { id: "hair_length", label: "Волосы — длина" },
+      { id: "hair_texture", label: "Волосы — текстура" },
+      { id: "hair_lighting", label: "Волосы — освещение" },
+      { id: "skin_tone", label: "Тон кожи" },
+      { id: "expression", label: "Выражение лица" },
+      { id: "outfit", label: "Одежда — образ" },
+      { id: "material", label: "Одежда — материал" },
+      { id: "design", label: "Одежда — дизайн", full: true }
+    ]},
+    { title: "Окружение и освещение", fields: [
+      { id: "light_source", label: "Источник света" },
+      { id: "light_temp", label: "Цветовая температура" },
+      { id: "time_of_day", label: "Время суток" },
+      { id: "light_details", label: "Детали света", kind: "chips" },
+      { id: "bg_structure", label: "Фон — структура" },
+      { id: "bg_depth", label: "Фон — глубина" },
+      { id: "bg_tones", label: "Фон — оттенки", kind: "chips", full: true }
+    ]},
+    { title: "Художественный стиль", fields: [
+      { id: "brushwork", label: "Техника мазка" },
+      { id: "medium", label: "Материал (medium)" },
+      { id: "focus", label: "Фокус" },
+      { id: "palette", label: "Палитра", kind: "chips" }
+    ]},
+    { title: "Атмосфера", fields: [
+      { id: "atm_tone", label: "Тональность" },
+      { id: "atm_intent", label: "Замысел" }
+    ]}
   ];
 
-  const listFields = new Set([
-    "style","mood","light_details","bg_tones","palette"
-  ]);
+  const selectFieldIds = [];
+  const chipFieldIds = [];
 
-  function splitList(value){
-    return value.split(",").map(s => s.trim()).filter(s => s.length > 0);
+  function el(tag, props, children){
+    const node = document.createElement(tag);
+    if(props){
+      Object.keys(props).forEach(k => {
+        if(k === "class") node.className = props[k];
+        else if(k === "text") node.textContent = props[k];
+        else node.setAttribute(k, props[k]);
+      });
+    }
+    (children || []).forEach(c => node.appendChild(c));
+    return node;
   }
 
-  function val(id){
-    return document.getElementById(id).value.trim();
+  function buildSelectField(field){
+    const options = OPT[field.id];
+    selectFieldIds.push(field.id);
+
+    const select = el("select", { id: field.id });
+    options.forEach(([ru, en]) => {
+      select.appendChild(el("option", { value: en, text: ru }));
+    });
+    select.appendChild(el("option", { value: CUSTOM_VALUE, text: "Другое (свой вариант)" }));
+
+    const customInput = el("input", {
+      type: "text", id: field.id + "_custom", class: "custom-input",
+      placeholder: "Введите значение на английском", style: "display:none"
+    });
+
+    select.addEventListener("change", () => {
+      customInput.style.display = select.value === CUSTOM_VALUE ? "block" : "none";
+      updatePreview();
+    });
+    customInput.addEventListener("input", updatePreview);
+
+    const wrap = el("div", { class: "field" + (field.full ? " full" : "") }, [
+      el("label", { text: field.label }),
+      select,
+      customInput
+    ]);
+    return wrap;
+  }
+
+  function buildChipsField(field){
+    const options = OPT[field.id];
+    chipFieldIds.push(field.id);
+
+    const chipsBox = el("div", { class: "chips", id: field.id + "_chips" });
+    options.forEach(([ru, en]) => {
+      const chip = el("button", { type: "button", class: "chip", "data-en": en, text: ru });
+      chip.addEventListener("click", () => {
+        chip.classList.toggle("selected");
+        updatePreview();
+      });
+      chipsBox.appendChild(chip);
+    });
+
+    const customInput = el("input", {
+      type: "text", id: field.id + "_custom", class: "custom-input",
+      placeholder: "Добавить своё (на английском, через запятую)"
+    });
+    customInput.addEventListener("input", updatePreview);
+
+    const wrap = el("div", { class: "field" + (field.full ? " full" : "") }, [
+      el("label", { text: field.label }),
+      chipsBox,
+      customInput
+    ]);
+    return wrap;
+  }
+
+  function renderForm(){
+    const root = document.getElementById("formRoot");
+    SECTIONS.forEach(section => {
+      const grid = el("div", { class: "field-grid" });
+      section.fields.forEach(field => {
+        const kind = field.kind || "select";
+        grid.appendChild(kind === "chips" ? buildChipsField(field) : buildSelectField(field));
+      });
+      const details = el("details", { class: "section" }, [
+        el("summary", { text: section.title }),
+        el("div", { class: "section-body" }, [grid])
+      ]);
+      if(section.open) details.setAttribute("open", "");
+      root.appendChild(details);
+    });
+  }
+
+  // ---------- Чтение значений ----------
+  function getSelectValue(id){
+    const select = document.getElementById(id);
+    if(select.value === CUSTOM_VALUE){
+      return document.getElementById(id + "_custom").value.trim();
+    }
+    return select.value;
+  }
+
+  function getChipsValue(id){
+    const chips = document.querySelectorAll("#" + id + "_chips .chip.selected");
+    const values = Array.from(chips).map(c => c.getAttribute("data-en"));
+    const customRaw = document.getElementById(id + "_custom").value.trim();
+    if(customRaw){
+      customRaw.split(",").map(s => s.trim()).filter(Boolean).forEach(v => values.push(v));
+    }
+    return values;
   }
 
   function buildPrompt(){
     const scene = {
-      type: val("type"),
-      style: splitList(val("style")),
-      mood: splitList(val("mood")),
+      type: getSelectValue("type"),
+      style: getChipsValue("style"),
+      mood: getChipsValue("mood"),
       composition: {
-        framing: val("comp_framing"),
-        subject_position: val("comp_position"),
-        setting: val("comp_setting")
+        framing: getSelectValue("comp_framing"),
+        subject_position: getSelectValue("comp_position"),
+        setting: getSelectValue("comp_setting")
       },
       subject: {
-        category: val("subj_category"),
+        category: getSelectValue("subj_category"),
         appearance: {
           hair: {
-            color: val("hair_color"),
-            length: val("hair_length"),
-            texture: val("hair_texture"),
-            lighting: val("hair_lighting")
+            color: getSelectValue("hair_color"),
+            length: getSelectValue("hair_length"),
+            texture: getSelectValue("hair_texture"),
+            lighting: getSelectValue("hair_lighting")
           },
-          skin_tone: val("skin_tone"),
-          expression: val("expression")
+          skin_tone: getSelectValue("skin_tone"),
+          expression: getSelectValue("expression")
         },
         clothing: {
-          outfit: val("outfit"),
-          material: val("material"),
-          design: val("design")
+          outfit: getSelectValue("outfit"),
+          material: getSelectValue("material"),
+          design: getSelectValue("design")
         },
-        posture: val("subj_posture")
+        posture: getSelectValue("subj_posture")
       },
       environment: {
         lighting: {
-          source: val("light_source"),
-          color_temperature: val("light_temp"),
-          time_of_day: val("time_of_day"),
-          details: splitList(val("light_details"))
+          source: getSelectValue("light_source"),
+          color_temperature: getSelectValue("light_temp"),
+          time_of_day: getSelectValue("time_of_day"),
+          details: getChipsValue("light_details")
         },
         background: {
-          structure: val("bg_structure"),
-          tones: splitList(val("bg_tones")),
-          depth: val("bg_depth")
+          structure: getSelectValue("bg_structure"),
+          tones: getChipsValue("bg_tones"),
+          depth: getSelectValue("bg_depth")
         }
       },
       artistry: {
-        brushwork: val("brushwork"),
-        medium: val("medium"),
-        focus: val("focus"),
-        palette: splitList(val("palette"))
+        brushwork: getSelectValue("brushwork"),
+        medium: getSelectValue("medium"),
+        focus: getSelectValue("focus"),
+        palette: getChipsValue("palette")
       },
       atmosphere: {
-        tone: val("atm_tone"),
-        intent: val("atm_intent")
+        tone: getSelectValue("atm_tone"),
+        intent: getSelectValue("atm_intent")
       }
     };
     return { scene };
@@ -528,9 +712,54 @@
     saveDraft();
   }
 
+  // ---------- Установка значений (для примера/черновика) ----------
+  function setSelectByEnValue(id, enValue){
+    const select = document.getElementById(id);
+    const custom = document.getElementById(id + "_custom");
+    const match = Array.from(select.options).find(o => o.value === enValue);
+    if(match){
+      select.value = enValue;
+      custom.style.display = "none";
+      custom.value = "";
+    } else {
+      select.value = CUSTOM_VALUE;
+      custom.style.display = "block";
+      custom.value = enValue || "";
+    }
+  }
+
+  function setChipsByEnValues(id, enValues){
+    const chips = document.querySelectorAll("#" + id + "_chips .chip");
+    const known = new Set(Array.from(chips).map(c => c.getAttribute("data-en")));
+    const leftover = [];
+    chips.forEach(c => c.classList.remove("selected"));
+    (enValues || []).forEach(v => {
+      if(known.has(v)){
+        Array.from(chips).find(c => c.getAttribute("data-en") === v).classList.add("selected");
+      } else if(v){
+        leftover.push(v);
+      }
+    });
+    document.getElementById(id + "_custom").value = leftover.join(", ");
+  }
+
+  // ---------- Черновик в localStorage ----------
   function saveDraft(){
-    const draft = {};
-    fieldIds.forEach(id => { draft[id] = document.getElementById(id).value; });
+    const draft = { selects: {}, chips: {} };
+    selectFieldIds.forEach(id => {
+      draft.selects[id] = {
+        value: document.getElementById(id).value,
+        custom: document.getElementById(id + "_custom").value
+      };
+    });
+    chipFieldIds.forEach(id => {
+      const selected = Array.from(document.querySelectorAll("#" + id + "_chips .chip.selected"))
+        .map(c => c.getAttribute("data-en"));
+      draft.chips[id] = {
+        selected: selected,
+        custom: document.getElementById(id + "_custom").value
+      };
+    });
     try{
       localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
       document.getElementById("statusText").textContent = "Черновик сохранён " + new Date().toLocaleTimeString("ru-RU");
@@ -544,16 +773,29 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return;
       const draft = JSON.parse(raw);
-      fieldIds.forEach(id => {
-        if(draft[id] !== undefined) document.getElementById(id).value = draft[id];
+      selectFieldIds.forEach(id => {
+        const saved = draft.selects && draft.selects[id];
+        if(!saved) return;
+        const select = document.getElementById(id);
+        const custom = document.getElementById(id + "_custom");
+        select.value = saved.value || "";
+        custom.value = saved.custom || "";
+        custom.style.display = select.value === CUSTOM_VALUE ? "block" : "none";
+      });
+      chipFieldIds.forEach(id => {
+        const saved = draft.chips && draft.chips[id];
+        if(!saved) return;
+        document.querySelectorAll("#" + id + "_chips .chip").forEach(c => {
+          c.classList.toggle("selected", saved.selected.includes(c.getAttribute("data-en")));
+        });
+        document.getElementById(id + "_custom").value = saved.custom || "";
       });
     }catch(e){ /* игнорируем повреждённый черновик */ }
   }
 
-  const exampleData = {
+  // ---------- Пример из исходного файла ----------
+  const exampleSelects = {
     type: "realistic painting",
-    style: "impressionistic, soft color palette, fine art realism",
-    mood: "serene, reflective, warm afternoon atmosphere",
     comp_framing: "full figure in balanced composition",
     comp_position: "left side of the image",
     comp_setting: "stone stairway illuminated by gentle sunlight",
@@ -571,30 +813,52 @@
     light_source: "natural sunlight",
     light_temp: "warm golden hue",
     time_of_day: "late afternoon",
-    light_details: "soft rim lighting, gentle gradients of shadow",
     bg_structure: "textured stone steps",
     bg_depth: "gradual fade into background light",
-    bg_tones: "beige, warm gray, soft tan",
     brushwork: "impressionistic, soft transitions",
     medium: "oil on canvas",
     focus: "interaction of light and atmosphere",
-    palette: "muted gold, warm earth tones, soft beige highlights",
     atm_tone: "peaceful observation",
     atm_intent: "capture"
   };
 
-  document.getElementById("loadExampleBtn").addEventListener("click", () => {
-    fieldIds.forEach(id => {
-      document.getElementById(id).value = exampleData[id] || "";
-    });
+  const exampleChips = {
+    style: ["impressionistic", "soft color palette", "fine art realism"],
+    mood: ["serene", "reflective", "warm afternoon atmosphere"],
+    light_details: ["soft rim lighting", "gentle gradients of shadow"],
+    bg_tones: ["beige", "warm gray", "soft tan"],
+    palette: ["muted gold", "warm earth tones", "soft beige highlights"]
+  };
+
+  function loadExample(){
+    selectFieldIds.forEach(id => setSelectByEnValue(id, exampleSelects[id] || ""));
+    chipFieldIds.forEach(id => setChipsByEnValues(id, exampleChips[id] || []));
     updatePreview();
-  });
+  }
+
+  function clearAll(){
+    selectFieldIds.forEach(id => {
+      document.getElementById(id).value = OPT[id][0][1];
+      const custom = document.getElementById(id + "_custom");
+      custom.value = "";
+      custom.style.display = "none";
+    });
+    chipFieldIds.forEach(id => {
+      document.querySelectorAll("#" + id + "_chips .chip").forEach(c => c.classList.remove("selected"));
+      document.getElementById(id + "_custom").value = "";
+    });
+    localStorage.removeItem(STORAGE_KEY);
+    updatePreview();
+  }
+
+  // ---------- Инициализация ----------
+  renderForm();
+
+  document.getElementById("loadExampleBtn").addEventListener("click", loadExample);
 
   document.getElementById("clearBtn").addEventListener("click", () => {
     if(!confirm("Очистить все поля формы?")) return;
-    fieldIds.forEach(id => { document.getElementById(id).value = ""; });
-    localStorage.removeItem(STORAGE_KEY);
-    updatePreview();
+    clearAll();
   });
 
   document.getElementById("exportBtn").addEventListener("click", () => {
@@ -620,10 +884,6 @@
     }catch(e){
       document.getElementById("statusText").textContent = "Не удалось скопировать — скопируйте вручную";
     }
-  });
-
-  fieldIds.forEach(id => {
-    document.getElementById(id).addEventListener("input", updatePreview);
   });
 
   loadDraft();
