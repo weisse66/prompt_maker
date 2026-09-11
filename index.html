@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Конструктор промптов</title>
+<style>
+  :root{
+    --bg: #f2f7f2;
+    --surface: #ffffff;
+    --surface-soft: #eaf3ea;
+    --border: #d6e6d9;
+    --text: #2c3a30;
+    --text-muted: #6b7d70;
+    --primary: #6b9080;
+    --primary-dark: #4f6f5a;
+    --primary-light: #cfe3d4;
+    --accent: #dd9c4c;
+    --accent-dark: #b97e34;
+    --accent-soft: #f7e7cf;
+    --danger: #c9714f;
+    --radius: 12px;
+    --shadow: 0 2px 10px rgba(79, 111, 90, 0.08);
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    font-family: "Segoe UI", "PT Sans", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height:100vh;
+    padding: 0;
+  }
+  header{
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    color:#fff;
+    padding: 22px 28px;
+    box-shadow: var(--shadow);
+  }
+  header h1{
+    margin:0 0 4px 0;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+  }
+  header p{
+    margin:0;
+    font-size: 13px;
+    color: #eaf3ea;
+    opacity: 0.9;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 20px;
+    padding: 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  @media (max-width: 900px){
+    .layout{ grid-template-columns: 1fr; }
+  }
+  .panel{
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .panel-header{
+    padding: 14px 18px;
+    background: var(--surface-soft);
+    border-bottom: 1px solid var(--border);
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .panel-header h2{
+    margin:0;
+    font-size: 15px;
+    color: var(--primary-dark);
+  }
+  .panel-body{ padding: 16px 18px; }
+  .toolbar{ display:flex; gap:8px; flex-wrap: wrap; }
+  button{
+    font-family: inherit;
+    font-size: 13px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 9px 14px;
+    cursor: pointer;
+    transition: filter 0.15s ease, transform 0.05s ease;
+  }
+  button:active{ transform: translateY(1px); }
+  .btn-primary{
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+  }
+  .btn-primary:hover{ filter: brightness(1.05); }
+  .btn-secondary{
+    background: var(--surface);
+    color: var(--primary-dark);
+    border: 1px solid var(--primary-light);
+  }
+  .btn-secondary:hover{ background: var(--surface-soft); }
+  .btn-danger{
+    background: var(--surface);
+    color: var(--danger);
+    border: 1px solid #ecc9b8;
+  }
+  .btn-danger:hover{ background: #fbf1ec; }
+
+  details.section{
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    background: #fbfdfb;
+    overflow: hidden;
+  }
+  details.section[open]{ background: #fdfefd; }
+  details.section summary{
+    cursor: pointer;
+    list-style: none;
+    padding: 12px 16px;
+    font-weight: 600;
+    color: var(--primary-dark);
+    display:flex;
+    align-items:center;
+    gap: 8px;
+    background: var(--surface-soft);
+  }
+  details.section summary::-webkit-details-marker{ display:none; }
+  details.section summary::before{
+    content: "▸";
+    display:inline-block;
+    transition: transform 0.15s ease;
+    color: var(--accent-dark);
+  }
+  details.section[open] summary::before{ transform: rotate(90deg); }
+
+  .section-body{ padding: 14px 16px 6px 16px; }
+  .field-grid{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+  }
+  @media (max-width: 560px){
+    .field-grid{ grid-template-columns: 1fr; }
+  }
+  .field{ display:flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+  .field.full{ grid-column: 1 / -1; }
+  label{
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  label .hint{ font-weight: 400; color: #92a397; }
+  input[type="text"], textarea{
+    font-family: inherit;
+    font-size: 13.5px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text);
+    outline: none;
+  }
+  input[type="text"]:focus, textarea:focus{
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(107, 144, 128, 0.15);
+  }
+  textarea{ resize: vertical; min-height: 40px; }
+
+  pre#jsonPreview{
+    background: #26332b;
+    color: #d8ecdc;
+    border-radius: 10px;
+    padding: 16px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    max-height: 620px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+  }
+  .status{
+    font-size: 12px;
+    color: var(--text-muted);
+    display:flex;
+    align-items:center;
+    gap: 6px;
+    min-height: 18px;
+  }
+  .status .dot{
+    width:7px; height:7px; border-radius:50%;
+    background: var(--primary);
+  }
+  .sticky-actions{
+    position: sticky;
+    top: 20px;
+  }
+  .badge{
+    display:inline-block;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  footer{
+    text-align:center;
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 18px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌿 Конструктор промптов</h1>
+  <p>Заполните структуру сцены — получите готовый JSON-промпт для генерации изображений</p>
+</header>
+
+<div class="layout">
+
+  <!-- ЛЕВАЯ ПАНЕЛЬ: ФОРМА -->
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Параметры промпта</h2>
+      <div class="toolbar">
+        <button class="btn-secondary" id="loadExampleBtn" type="button">Загрузить пример</button>
+        <button class="btn-danger" id="clearBtn" type="button">Очистить всё</button>
+      </div>
+    </div>
+    <div class="panel-body" id="formRoot">
+
+      <details class="section" open>
+        <summary>Сцена — общие параметры</summary>
+        <div class="section-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>Тип сцены</label>
+              <input type="text" id="type" placeholder="например: realistic painting">
+            </div>
+            <div class="field">
+              <label>Стиль <span class="hint">(через запятую)</span></label>
+              <input type="text" id="style" placeholder="impressionistic, fine art realism">
+            </div>
+            <div class="field full">
+              <label>Настроение <span class="hint">(через запятую)</span></label>
+              <input type="text" id="mood" placeholder="serene, reflective, warm afternoon atmosphere">
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary>Композиция</summary>
+        <div class="section-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>Кадрирование (framing)</label>
+              <input type="text" id="comp_framing" placeholder="full figure in balanced composition">
+            </div>
+            <div class="field">
+              <label>Положение объекта</label>
+              <input type="text" id="comp_position" placeholder="left side of the image">
+            </div>
+            <div class="field full">
+              <label>Место действия (setting)</label>
+              <input type="text" id="comp_setting" placeholder="stone stairway illuminated by gentle sunlight">
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary>Субъект / персонаж</summary>
+        <div class="section-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>Категория</label>
+              <input type="text" id="subj_category" placeholder="adult woman">
+            </div>
+            <div class="field">
+              <label>Поза</label>
+              <input type="text" id="subj_posture" placeholder="seated in a relaxed, natural pose">
+            </div>
+
+            <div class="field">
+              <label>Волосы — цвет</label>
+              <input type="text" id="hair_color" placeholder="dark brown">
+            </div>
+            <div class="field">
+              <label>Волосы — длина</label>
+              <input type="text" id="hair_length" placeholder="long">
+            </div>
+            <div class="field">
+              <label>Волосы — текстура</label>
+              <input type="text" id="hair_texture" placeholder="slightly wavy">
+            </div>
+            <div class="field">
+              <label>Волосы — освещение</label>
+              <input type="text" id="hair_lighting" placeholder="subtle rim light">
+            </div>
+
+            <div class="field">
+              <label>Тон кожи</label>
+              <input type="text" id="skin_tone" placeholder="fair and softly lit">
+            </div>
+            <div class="field">
+              <label>Выражение лица</label>
+              <input type="text" id="expression" placeholder="calm, thoughtful">
+            </div>
+
+            <div class="field">
+              <label>Одежда — образ (outfit)</label>
+              <input type="text" id="outfit" placeholder="light beige dress">
+            </div>
+            <div class="field">
+              <label>Одежда — материал</label>
+              <input type="text" id="material" placeholder="thin fabric with natural texture">
+            </div>
+            <div class="field full">
+              <label>Одежда — дизайн</label>
+              <input type="text" id="design" placeholder="simple, everyday style">
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary>Окружение и освещение</summary>
+        <div class="section-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>Источник света</label>
+              <input type="text" id="light_source" placeholder="natural sunlight">
+            </div>
+            <div class="field">
+              <label>Цветовая температура</label>
+              <input type="text" id="light_temp" placeholder="warm golden hue">
+            </div>
+            <div class="field">
+              <label>Время суток</label>
+              <input type="text" id="time_of_day" placeholder="late afternoon">
+            </div>
+            <div class="field">
+              <label>Детали света <span class="hint">(через запятую)</span></label>
+              <input type="text" id="light_details" placeholder="soft rim lighting, gentle gradients of shadow">
+            </div>
+
+            <div class="field">
+              <label>Фон — структура</label>
+              <input type="text" id="bg_structure" placeholder="textured stone steps">
+            </div>
+            <div class="field">
+              <label>Фон — глубина</label>
+              <input type="text" id="bg_depth" placeholder="gradual fade into background light">
+            </div>
+            <div class="field full">
+              <label>Фон — оттенки <span class="hint">(через запятую)</span></label>
+              <input type="text" id="bg_tones" placeholder="beige, warm gray, soft tan">
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary>Художественный стиль</summary>
+        <div class="section-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>Техника мазка (brushwork)</label>
+              <input type="text" id="brushwork" placeholder="impressionistic, soft transitions">
+            </div>
+            <div class="field">
+              <label>Материал (medium)</label>
+              <input type="text" id="medium" placeholder="oil on canvas">
+            </div>
+            <div class="field">
+              <label>Фокус</label>
+              <input type="text" id="focus" placeholder="interaction of light and atmosphere">
+            </div>
+            <div class="field">
+              <label>Палитра <span class="hint">(через запятую)</span></label>
+              <input type="text" id="palette" placeholder="muted gold, warm earth tones">
+            </div>
+          </div>
+        </div>
+      </details>
+
+      <details class="section">
+        <summary>Атмосфера</summary>
+        <div class="section-body">
+          <div class="field-grid">
+            <div class="field">
+              <label>Тональность</label>
+              <input type="text" id="atm_tone" placeholder="peaceful observation">
+            </div>
+            <div class="field">
+              <label>Замысел (intent)</label>
+              <input type="text" id="atm_intent" placeholder="capture">
+            </div>
+          </div>
+        </div>
+      </details>
+
+    </div>
+  </div>
+
+  <!-- ПРАВАЯ ПАНЕЛЬ: ПРЕВЬЮ И ЭКСПОРТ -->
+  <div class="panel sticky-actions">
+    <div class="panel-header">
+      <h2>Предпросмотр JSON</h2>
+      <span class="badge">.txt экспорт</span>
+    </div>
+    <div class="panel-body">
+      <pre id="jsonPreview">{}</pre>
+      <div style="height:14px"></div>
+      <div class="toolbar" style="margin-bottom:10px;">
+        <button class="btn-primary" id="exportBtn" type="button">⬇ Экспортировать в .txt</button>
+        <button class="btn-secondary" id="copyBtn" type="button">Скопировать JSON</button>
+      </div>
+      <div class="status"><span class="dot"></span><span id="statusText">Черновик сохраняется автоматически</span></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Промпт формируется в реальном времени и сохраняется в браузере, пока вы работаете</footer>
+
+<script>
+  const STORAGE_KEY = "prompt_maker_draft_v1";
+
+  const fieldIds = [
+    "type","style","mood",
+    "comp_framing","comp_position","comp_setting",
+    "subj_category","subj_posture",
+    "hair_color","hair_length","hair_texture","hair_lighting",
+    "skin_tone","expression",
+    "outfit","material","design",
+    "light_source","light_temp","time_of_day","light_details",
+    "bg_structure","bg_depth","bg_tones",
+    "brushwork","medium","focus","palette",
+    "atm_tone","atm_intent"
+  ];
+
+  const listFields = new Set([
+    "style","mood","light_details","bg_tones","palette"
+  ]);
+
+  function splitList(value){
+    return value.split(",").map(s => s.trim()).filter(s => s.length > 0);
+  }
+
+  function val(id){
+    return document.getElementById(id).value.trim();
+  }
+
+  function buildPrompt(){
+    const scene = {
+      type: val("type"),
+      style: splitList(val("style")),
+      mood: splitList(val("mood")),
+      composition: {
+        framing: val("comp_framing"),
+        subject_position: val("comp_position"),
+        setting: val("comp_setting")
+      },
+      subject: {
+        category: val("subj_category"),
+        appearance: {
+          hair: {
+            color: val("hair_color"),
+            length: val("hair_length"),
+            texture: val("hair_texture"),
+            lighting: val("hair_lighting")
+          },
+          skin_tone: val("skin_tone"),
+          expression: val("expression")
+        },
+        clothing: {
+          outfit: val("outfit"),
+          material: val("material"),
+          design: val("design")
+        },
+        posture: val("subj_posture")
+      },
+      environment: {
+        lighting: {
+          source: val("light_source"),
+          color_temperature: val("light_temp"),
+          time_of_day: val("time_of_day"),
+          details: splitList(val("light_details"))
+        },
+        background: {
+          structure: val("bg_structure"),
+          tones: splitList(val("bg_tones")),
+          depth: val("bg_depth")
+        }
+      },
+      artistry: {
+        brushwork: val("brushwork"),
+        medium: val("medium"),
+        focus: val("focus"),
+        palette: splitList(val("palette"))
+      },
+      atmosphere: {
+        tone: val("atm_tone"),
+        intent: val("atm_intent")
+      }
+    };
+    return { scene };
+  }
+
+  function updatePreview(){
+    const data = buildPrompt();
+    document.getElementById("jsonPreview").textContent = JSON.stringify(data, null, 2);
+    saveDraft();
+  }
+
+  function saveDraft(){
+    const draft = {};
+    fieldIds.forEach(id => { draft[id] = document.getElementById(id).value; });
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
+      document.getElementById("statusText").textContent = "Черновик сохранён " + new Date().toLocaleTimeString("ru-RU");
+    }catch(e){
+      document.getElementById("statusText").textContent = "Не удалось сохранить черновик";
+    }
+  }
+
+  function loadDraft(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return;
+      const draft = JSON.parse(raw);
+      fieldIds.forEach(id => {
+        if(draft[id] !== undefined) document.getElementById(id).value = draft[id];
+      });
+    }catch(e){ /* игнорируем повреждённый черновик */ }
+  }
+
+  const exampleData = {
+    type: "realistic painting",
+    style: "impressionistic, soft color palette, fine art realism",
+    mood: "serene, reflective, warm afternoon atmosphere",
+    comp_framing: "full figure in balanced composition",
+    comp_position: "left side of the image",
+    comp_setting: "stone stairway illuminated by gentle sunlight",
+    subj_category: "adult woman",
+    subj_posture: "seated in a relaxed, natural pose with feet resting on the step",
+    hair_color: "dark brown",
+    hair_length: "long",
+    hair_texture: "slightly wavy",
+    hair_lighting: "subtle rim light",
+    skin_tone: "fair and softly lit",
+    expression: "calm, thoughtful",
+    outfit: "light beige dress",
+    material: "thin fabric with natural texture",
+    design: "simple, everyday style",
+    light_source: "natural sunlight",
+    light_temp: "warm golden hue",
+    time_of_day: "late afternoon",
+    light_details: "soft rim lighting, gentle gradients of shadow",
+    bg_structure: "textured stone steps",
+    bg_depth: "gradual fade into background light",
+    bg_tones: "beige, warm gray, soft tan",
+    brushwork: "impressionistic, soft transitions",
+    medium: "oil on canvas",
+    focus: "interaction of light and atmosphere",
+    palette: "muted gold, warm earth tones, soft beige highlights",
+    atm_tone: "peaceful observation",
+    atm_intent: "capture"
+  };
+
+  document.getElementById("loadExampleBtn").addEventListener("click", () => {
+    fieldIds.forEach(id => {
+      document.getElementById(id).value = exampleData[id] || "";
+    });
+    updatePreview();
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", () => {
+    if(!confirm("Очистить все поля формы?")) return;
+    fieldIds.forEach(id => { document.getElementById(id).value = ""; });
+    localStorage.removeItem(STORAGE_KEY);
+    updatePreview();
+  });
+
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    const data = buildPrompt();
+    const text = JSON.stringify(data, null, 2);
+    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "prompt.txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  document.getElementById("copyBtn").addEventListener("click", async () => {
+    const data = buildPrompt();
+    const text = JSON.stringify(data, null, 2);
+    try{
+      await navigator.clipboard.writeText(text);
+      document.getElementById("statusText").textContent = "JSON скопирован в буфер обмена";
+    }catch(e){
+      document.getElementById("statusText").textContent = "Не удалось скопировать — скопируйте вручную";
+    }
+  });
+
+  fieldIds.forEach(id => {
+    document.getElementById(id).addEventListener("input", updatePreview);
+  });
+
+  loadDraft();
+  updatePreview();
+</script>
+
+</body>
+</html>
