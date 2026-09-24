@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Контакты — STIRALKI</title>
+  <meta name="description" content="Телефоны, мессенджеры, график работы и форма заявки на ремонт стиральной машины.">
+  <meta name="theme-color" content="#0F2B45">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo" aria-label="STIRALKI — на главную">
+        <span class="logo__mark">S</span>
+        <span class="logo__text">STIRALKI</span>
+      </a>
+      <nav class="nav" id="site-nav" aria-label="Главное меню">
+        <a href="index.html#services">Услуги</a>
+        <a href="prices.html">Цены</a>
+        <a href="about.html">О нас</a>
+        <a href="blog.html">Это интересно</a>
+        <a href="contacts.html" class="is-active" aria-current="page">Контакты</a>
+        <a href="contacts.html#form" class="btn btn--primary nav__cta">Вызвать мастера</a>
+      </nav>
+      <a href="tel:+380674527844" class="header__phone"><span class="header__phone-icon" aria-hidden="true">☎</span>067-452-78-44</a>
+      <button class="burger" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Открыть меню"><span></span></button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="page-hero">
+      <div class="container">
+        <div class="crumbs"><a href="index.html">Главная</a> / Контакты</div>
+        <h1 class="h1">Контакты</h1>
+        <p class="lead">Звоните, пишите в мессенджеры или оставьте заявку — перезвоню в течение 15 минут.</p>
+        <div class="grid grid--4 contact-cards">
+          <div class="card contact-card">
+            <div class="contact-card__k">Телефон</div>
+            <a href="tel:+380674527844" class="contact-card__v">067-452-78-44</a>
+            <div class="contact-card__s">Основной номер, Kyivstar</div>
+          </div>
+          <div class="card contact-card">
+            <div class="contact-card__k">Телефон</div>
+            <a href="tel:+380661545942" class="contact-card__v">066-154-59-42</a>
+            <div class="contact-card__s">Дополнительный, Vodafone</div>
+          </div>
+          <div class="card contact-card">
+            <div class="contact-card__k">Viber</div>
+            <a href="viber://chat?number=%2B380674527844" class="contact-card__v">Написать в Viber</a>
+            <div class="contact-card__s">Можно прислать фото или видео поломки</div>
+          </div>
+          <div class="card contact-card">
+            <div class="contact-card__k">Telegram</div>
+            <a href="#" class="contact-card__v">Написать в Telegram</a>
+            <div class="contact-card__s">Отвечаю в течение 15 минут</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="--section-y:64px">
+      <div class="container two-col two-col--narrow-gap">
+        <div class="map"><div class="ph ph--rounded">карта зоны обслуживания</div></div>
+        <div>
+          <h2 class="h2">Где я работаю</h2>
+          <p class="body-text" style="margin-top:14px">Выезжаю во все районы Харькова бесплатно. По Харьковской области — по договорённости, стоимость выезда от 200 грн.</p>
+          <div class="chips" style="margin-top:22px">
+            <span class="pill pill--soft">Салтовка</span>
+            <span class="pill pill--soft">Центр</span>
+            <span class="pill pill--soft">Алексеевка</span>
+            <span class="pill pill--soft">ХТЗ</span>
+            <span class="pill pill--soft">Холодная Гора</span>
+            <span class="pill pill--soft">Новые Дома</span>
+            <span class="pill pill--soft">Павлово Поле</span>
+            <span class="pill pill--soft">Одесская</span>
+            <span class="pill pill--soft">Жуковского</span>
+          </div>
+          <div class="hours">
+            <div class="hours__row"><span>Пн — Пт</span><span>8:00 — 20:00</span></div>
+            <div class="hours__row"><span>Суббота</span><span>9:00 — 18:00</span></div>
+            <div class="hours__row"><span>Воскресенье</span><span>по договорённости</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--dark" id="form">
+      <div class="container form-section__grid">
+        <div>
+          <h2 class="h2">Обратная связь</h2>
+          <p class="form-section__text">Опишите проблему — мастер свяжется с вами в течение 15 мин., уточнит детали и назовёт ориентировочную цену.</p>
+          <ol class="mini-steps">
+            <li><span>01</span>Заявка</li>
+            <li><span>02</span>Звонок мастера и выбор времени</li>
+            <li><span>03</span>Диагностика и ремонт на месте</li>
+          </ol>
+        </div>
+        <div class="form-card">
+          <form data-lead-form novalidate>
+            <div class="form-grid">
+              <label class="field">Как к вам обращаться?
+                <input class="input" name="name" autocomplete="name" placeholder="Введите ваше имя">
+              </label>
+              <label class="field">Телефон
+                <input class="input" name="tel" type="tel" inputmode="tel" autocomplete="tel" placeholder="050-123-45-67">
+              </label>
+            </div>
+            <div class="field--mt field__label" id="way-label">Как удобнее связаться?</div>
+            <input type="hidden" name="way" value="Звонок">
+            <div class="chips" role="group" aria-labelledby="way-label" style="margin-top:8px">
+              <button type="button" class="chip is-active" data-way="Звонок" aria-pressed="true">Звонок</button>
+              <button type="button" class="chip" data-way="Viber" aria-pressed="false">Viber</button>
+              <button type="button" class="chip" data-way="Telegram" aria-pressed="false">Telegram</button>
+            </div>
+            <label class="field field--mt">Сообщение
+              <textarea class="input" name="note" rows="4" placeholder="Марка машины и что случилось"></textarea>
+            </label>
+            <label class="check"><input type="checkbox" name="agree"> Я согласен на обработку персональных данных</label>
+            <button type="submit" class="btn btn--primary on-light btn--block">Отправить</button>
+            <div class="form-hint" aria-live="polite"></div>
+          </form>
+          <div class="form-success" hidden role="status">
+            <div class="form-success__icon" aria-hidden="true">✓</div>
+            <h3>Заявка принята</h3>
+            <p>Мастер свяжется с вами в течение 15 минут.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <a href="index.html" class="logo">
+            <span class="logo__mark">S</span>
+            <span class="logo__text">STIRALKI</span>
+          </a>
+          <p class="footer__about">Профессиональный ремонт стиральных машин любых марок и моделей в Харькове и Харьковской области</p>
+        </div>
+        <div>
+          <div class="footer__title">Контакты</div>
+          <ul class="footer__links">
+            <li><a href="tel:+380674527844" class="strong">067-452-78-44</a></li>
+            <li><a href="tel:+380661545942">066-154-59-42</a></li>
+            <li><a href="viber://chat?number=%2B380674527844">Viber</a></li>
+            <li><a href="contacts.html">Telegram</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__title">Меню</div>
+          <ul class="footer__links">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="index.html#services">Услуги</a></li>
+            <li><a href="prices.html">Цены</a></li>
+            <li><a href="about.html">О нас</a></li>
+            <li><a href="blog.html">Статьи</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__title">Информация</div>
+          <ul class="footer__links">
+            <li><a href="blog.html">Это интересно</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+            <li><a href="contacts.html">Политика конфиденциальности</a></li>
+          </ul>
+          <a href="contacts.html#form" class="btn btn--primary btn--sm">Вызвать мастера</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span data-year>2025</span> STIRALKI. Все права защищены.</span>
+        <span>Харьков и Харьковская область</span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="tel:+380674527844" class="fab-call" aria-label="Позвонить мастеру">☎</a>
+
+</body>
+</html>
