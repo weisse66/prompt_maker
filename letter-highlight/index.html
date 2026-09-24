@@ -3,19 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Подсветка заголовка по буквам</title>
+  <title>Подсветка текста по буквам</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Пустое место сверху, чтобы было видно, что анимация стартует только при прокрутке к блоку -->
+  <!--
+    КАК ПОЛЬЗОВАТЬСЯ:
+    1. Добавьте класс js-letters любому элементу с текстом (h1, h2, p, a, div, span...).
+    2. Слово или фразу, которые должны стать красными, оберните в <span class="accent">...</span>.
+    3. Скорость можно задать отдельно для элемента атрибутом data-letter-delay="80" (мс между буквами).
+       Если атрибута нет — берётся общая скорость из script.js (LETTER_DELAY).
+  -->
+
   <section class="spacer">
     <p>Прокрутите вниз ↓</p>
   </section>
 
-  <!-- Блок с заголовком. Анимация запускается, когда этот блок появляется на экране -->
-  <section class="hero">
-    <h1 class="js-letters">Мы создаём сайты, которые приносят клиентов и продажи</h1>
+  <!-- Пример 1: заголовок, красное — целая фраза -->
+  <section class="block">
+    <h1 class="js-letters">
+      Мы создаём сайты <span class="accent">под ключ</span>, которые приносят клиентов
+    </h1>
+  </section>
+
+  <!-- Пример 2: несколько выделенных слов и своя скорость для этого элемента -->
+  <section class="block">
+    <h2 class="js-letters" data-letter-delay="30">
+      <span class="accent">Быстро</span>, качественно и <span class="accent">без переплат</span>
+    </h2>
+  </section>
+
+  <!-- Пример 3: обычный абзац без красных слов -->
+  <section class="block">
+    <p class="js-letters text">
+      Эффект работает на любой надписи: заголовке, абзаце, кнопке или ссылке.
+    </p>
   </section>
 
   <section class="spacer"></section>

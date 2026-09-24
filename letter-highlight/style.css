@@ -1,3 +1,46 @@
+/* =====================================================================
+   НАСТРОЙКИ ЦВЕТОВ И ПЛАВНОСТИ
+   ===================================================================== */
+:root {
+  --letter-color-start: #DFDFDF;   /* исходный цвет букв */
+  --letter-color-end: #FFFFFF;     /* цвет обычных букв после подсветки */
+  --letter-color-accent: #FF0000;  /* цвет букв внутри <span class="accent"> */
+
+  /* СКОРОСТЬ СМЕНЫ ЦВЕТА ОДНОЙ БУКВЫ (плавность перехода).
+     Пауза МЕЖДУ буквами настраивается отдельно — в script.js (LETTER_DELAY). */
+  --letter-transition: 0.4s;
+}
+
+
+/* =====================================================================
+   ЭФФЕКТ — эти правила нужны для работы подсветки
+   ===================================================================== */
+
+/* Каждая буква — отдельный span. Пока не подсвечена — исходный цвет */
+.js-letters .letter {
+  color: var(--letter-color-start);
+  transition: color var(--letter-transition) ease;
+}
+
+/* Подсвеченная обычная буква */
+.js-letters .letter.is-lit {
+  color: var(--letter-color-end);
+}
+
+/* Подсвеченная буква внутри выделенного слова/фразы */
+.js-letters .accent .letter.is-lit {
+  color: var(--letter-color-accent);
+}
+
+/* Слово не разрывается переносом строки посередине */
+.js-letters .word {
+  white-space: nowrap;
+}
+
+
+/* =====================================================================
+   ОФОРМЛЕНИЕ ЗАГОТОВКИ — можно менять или удалить
+   ===================================================================== */
 * {
   box-sizing: border-box;
 }
@@ -8,15 +51,8 @@ body {
   background: #111111;
 }
 
-.spacer {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #777777;
-}
-
-.hero {
+.spacer,
+.block {
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -24,31 +60,27 @@ body {
   padding: 0 16px;
 }
 
-.hero h1 {
+.spacer {
+  color: #777777;
+}
+
+.block h1,
+.block h2,
+.block .text {
   max-width: 900px;
   margin: 0;
-  font-size: clamp(32px, 6vw, 72px);
-  line-height: 1.15;
+  line-height: 1.2;
   text-align: center;
 }
 
-/* Каждая буква заголовка — отдельный span. Начальный цвет — #DFDFDF */
-.letter {
-  color: #DFDFDF;
-  transition: color 0.4s ease;
+.block h1 {
+  font-size: clamp(32px, 6vw, 72px);
 }
 
-/* Обычная буква после «зажигания» становится белой */
-.letter.is-lit {
-  color: #FFFFFF;
+.block h2 {
+  font-size: clamp(26px, 4.5vw, 52px);
 }
 
-/* Буква из выделенного слова после «зажигания» становится красной */
-.letter.is-accent.is-lit {
-  color: #FF0000;
-}
-
-/* Слово целиком не переносится по буквам на новую строку */
-.word {
-  white-space: nowrap;
+.block .text {
+  font-size: clamp(18px, 2.5vw, 28px);
 }

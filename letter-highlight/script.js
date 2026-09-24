@@ -1,125 +1,148 @@
 // =====================================================================
-// НАСТРОЙКИ — меняйте только этот блок
+// НАСТРОЙКИ
 // =====================================================================
 
-// Слова, которые должны стать красными (#FF0000), а не белыми.
-// Регистр не важен: «Сайты» и «сайты» считаются одним словом.
-// Знаки препинания рядом со словом (запятая, точка и т.п.) не мешают совпадению.
-const ACCENT_WORDS = ['сайты', 'продажи'];
-
-// Задержка между «зажиганием» соседних букв, в миллисекундах.
-// Чем меньше число, тем быстрее «бежит» подсветка.
+// СКОРОСТЬ: пауза между «зажиганием» соседних букв, в миллисекундах.
+// Чем меньше число, тем быстрее бежит подсветка.
+// Это общее значение для всех элементов. Для отдельного элемента его можно
+// переопределить прямо в HTML атрибутом data-letter-delay="80".
+// (Плавность смены цвета одной буквы задаётся в style.css: --letter-transition.)
 const LETTER_DELAY = 60;
 
-// Какая часть блока должна появиться на экране, чтобы анимация стартовала.
-// 0.5 = половина блока, 1 = блок целиком, 0 = хотя бы один пиксель.
+// Какая часть элемента должна появиться на экране, чтобы анимация стартовала.
+// 0.5 = половина, 1 = целиком, 0 = хотя бы один пиксель.
 const VISIBILITY_THRESHOLD = 0.5;
 
-// CSS-селектор заголовков, к которым применяется эффект.
-// Можно навесить класс js-letters на любое количество заголовков.
+// Селектор элементов с эффектом. Добавьте этот класс любой надписи в HTML.
 const TITLE_SELECTOR = '.js-letters';
 
 
 // =====================================================================
-// ПОДГОТОВКА: разбиваем текст заголовка на отдельные буквы
+// ПОДГОТОВКА: разбиваем текст элемента на отдельные буквы
 // =====================================================================
 
-// Приводим слово к «чистому» виду для сравнения:
-// убираем знаки препинания по краям и переводим в нижний регистр.
-function normalizeWord(word) {
-  return word
-    .replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '') // срезаем не-буквы и не-цифры в начале и в конце
-    .toLowerCase();
-}
+// Превращает один текстовый кусок в набор span-ов:
+// каждое слово — <span class="word">, внутри каждая буква — <span class="letter">.
+// Пробелы между словами остаются обычным текстом.
+// Все созданные буквы добавляются в массив letters (по порядку).
+function splitTextNode(textNode, letters) {
+  const fragment = document.createDocumentFragment();
 
-// Заранее приводим список выделенных слов к тому же виду,
-// чтобы потом сравнивать быстро и без ошибок из-за регистра.
-const accentSet = new Set(ACCENT_WORDS.map(normalizeWord));
+  // Делим текст на части: слова и пробелы. Скобки в регулярном выражении
+  // сохраняют пробелы в результате, чтобы не потерять их.
+  const parts = textNode.textContent.split(/(\s+)/);
 
-// Функция превращает текст заголовка в набор <span> — по одному на каждую букву.
-// Возвращает массив всех span-букв в порядке их следования в тексте.
-function splitTitleIntoLetters(title) {
-  const text = title.textContent.trim(); // берём исходный текст заголовка
-  const words = text.split(/\s+/);       // делим текст на слова по пробелам
-  const letters = [];                    // сюда соберём все span-буквы по порядку
+  parts.forEach((part) => {
+    if (part === '') return; // пустые кусочки пропускаем
 
-  title.textContent = ''; // очищаем заголовок, дальше заполним его заново
+    // Пробельный кусок — сжимаем до одного пробела и вставляем как есть
+    if (/^\s+$/.test(part)) {
+      fragment.appendChild(document.createTextNode(' '));
+      return;
+    }
 
-  words.forEach((word, wordIndex) => {
-    // Обёртка для слова — нужна, чтобы слово не разрывалось переносом строки посередине
+    // Слово: обёртка, чтобы слово не рвалось переносом строки
     const wordSpan = document.createElement('span');
     wordSpan.className = 'word';
 
-    // Проверяем, входит ли слово в список выделяемых (красных)
-    const isAccent = accentSet.has(normalizeWord(word));
-
-    // Перебираем символы слова. Array.from корректно работает с эмодзи и составными символами.
-    Array.from(word).forEach((char) => {
+    // Array.from корректно делит на символы даже эмодзи
+    Array.from(part).forEach((char) => {
       const letterSpan = document.createElement('span');
       letterSpan.className = 'letter';
       letterSpan.textContent = char;
-
-      // Если слово выделенное — помечаем букву классом is-accent,
-      // тогда CSS покрасит её в #FF0000 вместо #FFFFFF
-      if (isAccent) {
-        letterSpan.classList.add('is-accent');
-      }
-
       wordSpan.appendChild(letterSpan);
       letters.push(letterSpan);
     });
 
-    title.appendChild(wordSpan);
-
-    // Между словами возвращаем пробел (после последнего слова он не нужен)
-    if (wordIndex < words.length - 1) {
-      title.appendChild(document.createTextNode(' '));
-    }
+    fragment.appendChild(wordSpan);
   });
 
-  // Для экранных дикторов (незрячих пользователей) сохраняем исходный текст целиком,
-  // чтобы он не читался по буквам
-  title.setAttribute('aria-label', text);
+  // Заменяем исходный текст на подготовленные span-ы
+  textNode.replaceWith(fragment);
+}
+
+// Обходит элемент и всех его потомков. Текст разбивается на буквы,
+// а вложенные теги (например, <span class="accent">, <br>, <a>) остаются на месте.
+// Благодаря этому буквы внутри .accent сами окажутся внутри .accent —
+// и CSS покрасит их в красный.
+function splitElement(element, letters) {
+  // Копируем список детей заранее, т.к. во время обхода мы их заменяем
+  Array.from(element.childNodes).forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      splitTextNode(node, letters);   // текст → буквы
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      splitElement(node, letters);    // тег → заходим внутрь и продолжаем
+    }
+  });
+}
+
+// Готовит элемент к анимации и возвращает массив всех его букв по порядку
+function prepareElement(element) {
+  // Сохраняем исходный текст для экранных дикторов (незрячих пользователей),
+  // чтобы надпись не читалась по одной букве
+  const originalText = element.textContent.replace(/\s+/g, ' ').trim();
+  element.setAttribute('aria-label', originalText);
+
+  const letters = [];
+  splitElement(element, letters);
+
+  // Сами буквы от дикторов скрываем — им достаточно aria-label
+  letters.forEach((letter) => letter.setAttribute('aria-hidden', 'true'));
 
   return letters;
 }
 
 
 // =====================================================================
-// АНИМАЦИЯ: поочерёдно «зажигаем» буквы
+// АНИМАЦИЯ
 // =====================================================================
 
-// Добавляет каждой букве класс is-lit с нарастающей задержкой.
-// Сам плавный переход цвета делает CSS (свойство transition в style.css).
-function lightUpLetters(letters) {
-  letters.forEach((letter, index) => {
-    setTimeout(() => {
-      letter.classList.add('is-lit');
-    }, index * LETTER_DELAY); // 1-я буква сразу, 2-я через LETTER_DELAY мс, 3-я через 2×LETTER_DELAY и т.д.
-  });
+// Поочерёдно «зажигает» буквы: добавляет класс is-lit с нарастающей задержкой.
+// Сам плавный переход цвета делает CSS (transition в style.css).
+// Возвращает список запущенных таймеров, чтобы их можно было отменить.
+function lightUp(letters, delay) {
+  return letters.map((letter, index) =>
+    setTimeout(() => letter.classList.add('is-lit'), index * delay)
+    // 1-я буква сразу, 2-я через delay мс, 3-я через 2×delay и т.д.
+  );
+}
+
+// Возвращает все буквы в исходный цвет и отменяет ещё не сработавшие таймеры.
+// Нужно, чтобы при следующем появлении на экране анимация началась заново.
+function reset(letters, timers) {
+  timers.forEach(clearTimeout);
+  letters.forEach((letter) => letter.classList.remove('is-lit'));
 }
 
 
 // =====================================================================
-// ЗАПУСК: следим, когда заголовок появится на экране
+// ЗАПУСК: следим за появлением каждого элемента на экране
 // =====================================================================
 
-document.querySelectorAll(TITLE_SELECTOR).forEach((title) => {
-  // Сразу разбиваем заголовок на буквы (все они пока серые #DFDFDF)
-  const letters = splitTitleIntoLetters(title);
+document.querySelectorAll(TITLE_SELECTOR).forEach((element) => {
+  const letters = prepareElement(element); // разбиваем на буквы (все пока #DFDFDF)
+  let timers = [];                         // таймеры текущего запуска анимации
 
-  // IntersectionObserver — встроенный инструмент браузера,
-  // который сообщает, когда элемент появляется в видимой области экрана
+  // Скорость для этого элемента: из data-letter-delay, иначе общая LETTER_DELAY
+  const customDelay = parseInt(element.dataset.letterDelay, 10);
+  const delay = Number.isNaN(customDelay) ? LETTER_DELAY : customDelay;
+
+  // IntersectionObserver — встроенный инструмент браузера, который сообщает,
+  // когда элемент появляется на экране и когда уходит с него
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      // isIntersecting = true, когда видна нужная часть блока (см. VISIBILITY_THRESHOLD)
       if (entry.isIntersecting) {
-        lightUpLetters(letters);        // запускаем поочерёдную подсветку
-        observer.unobserve(entry.target); // перестаём следить — анимация проигрывается один раз
+        // Элемент появился на экране → сбрасываем прошлый запуск и зажигаем буквы
+        reset(letters, timers);
+        timers = lightUp(letters, delay);
+      } else {
+        // Элемент ушёл с экрана → возвращаем исходный цвет,
+        // чтобы при следующем появлении анимация проигралась снова
+        reset(letters, timers);
+        timers = [];
       }
     });
   }, { threshold: VISIBILITY_THRESHOLD });
 
-  // Начинаем следить за заголовком
-  observer.observe(title);
+  observer.observe(element);
 });
