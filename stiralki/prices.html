@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Цены на ремонт стиральных машин — STIRALKI</title>
+  <meta name="description" content="Прайс-лист на ремонт стиральных машин в Харькове. Бесплатная диагностика при ремонте и выезд по городу.">
+  <meta name="theme-color" content="#0F2B45">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <a href="index.html" class="logo" aria-label="STIRALKI — на главную">
+        <span class="logo__mark">S</span>
+        <span class="logo__text">STIRALKI</span>
+      </a>
+      <nav class="nav" id="site-nav" aria-label="Главное меню">
+        <a href="index.html#services">Услуги</a>
+        <a href="prices.html" class="is-active" aria-current="page">Цены</a>
+        <a href="about.html">О нас</a>
+        <a href="blog.html">Это интересно</a>
+        <a href="contacts.html">Контакты</a>
+        <a href="contacts.html#form" class="btn btn--primary nav__cta">Вызвать мастера</a>
+      </nav>
+      <a href="tel:+380674527844" class="header__phone"><span class="header__phone-icon" aria-hidden="true">☎</span>067-452-78-44</a>
+      <button class="burger" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Открыть меню"><span></span></button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="page-hero page-hero--dark">
+      <div class="container">
+        <div class="crumbs"><a href="index.html">Главная</a> / Цены</div>
+        <h1 class="h1">Прайс-лист на ремонт</h1>
+        <p class="lead">Цены на работу мастера без учёта стоимости запчастей. Диагностика бесплатна при ремонте, выезд по Харькову — бесплатно.</p>
+        <div class="kpis">
+          <div class="kpi"><b>0 грн</b><span>диагностика при ремонте</span></div>
+          <div class="kpi"><b>6 мес.</b><span>гарантия на работы и детали</span></div>
+          <div class="kpi"><b>15 мин</b><span>перезвоним после заявки</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--soft" style="padding-top:56px">
+      <div class="container">
+        <div class="toolbar">
+          <div class="chips chips--scroll" id="price-tabs" role="group" aria-label="Категории услуг"></div>
+          <label class="search">
+            <span class="visually-hidden">Поиск по услугам</span>
+            <input class="input" id="price-search" type="search" placeholder="Поиск по услугам…" autocomplete="off">
+          </label>
+        </div>
+        <div class="price-groups" id="price-groups" aria-live="polite"></div>
+        <div class="empty" id="price-empty" hidden>Ничего не найдено. Опишите проблему по телефону — подскажем цену.</div>
+
+        <div class="note-bar note-bar--dark">
+          <div>
+            <div class="note-bar__title">Не нашли свою поломку?</div>
+            <p>Цены указаны ориентировочно — точную стоимость мастер называет после диагностики, до начала работ.</p>
+          </div>
+          <a href="contacts.html#form" class="btn btn--primary btn--sm">Рассказать о проблеме</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <a href="index.html" class="logo">
+            <span class="logo__mark">S</span>
+            <span class="logo__text">STIRALKI</span>
+          </a>
+          <p class="footer__about">Профессиональный ремонт стиральных машин любых марок и моделей в Харькове и Харьковской области</p>
+        </div>
+        <div>
+          <div class="footer__title">Контакты</div>
+          <ul class="footer__links">
+            <li><a href="tel:+380674527844" class="strong">067-452-78-44</a></li>
+            <li><a href="tel:+380661545942">066-154-59-42</a></li>
+            <li><a href="viber://chat?number=%2B380674527844">Viber</a></li>
+            <li><a href="contacts.html">Telegram</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__title">Меню</div>
+          <ul class="footer__links">
+            <li><a href="index.html">Главная</a></li>
+            <li><a href="index.html#services">Услуги</a></li>
+            <li><a href="prices.html">Цены</a></li>
+            <li><a href="about.html">О нас</a></li>
+            <li><a href="blog.html">Статьи</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer__title">Информация</div>
+          <ul class="footer__links">
+            <li><a href="blog.html">Это интересно</a></li>
+            <li><a href="contacts.html">Контакты</a></li>
+            <li><a href="contacts.html">Политика конфиденциальности</a></li>
+          </ul>
+          <a href="contacts.html#form" class="btn btn--primary btn--sm">Вызвать мастера</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>© <span data-year>2025</span> STIRALKI. Все права защищены.</span>
+        <span>Харьков и Харьковская область</span>
+      </div>
+    </div>
+  </footer>
+
+  <a href="tel:+380674527844" class="fab-call" aria-label="Позвонить мастеру">☎</a>
+
+</body>
+</html>
