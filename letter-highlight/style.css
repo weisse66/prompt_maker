@@ -1,0 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #111111;
+}
+
+.spacer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #777777;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+}
+
+.hero h1 {
+  max-width: 900px;
+  margin: 0;
+  font-size: clamp(32px, 6vw, 72px);
+  line-height: 1.15;
+  text-align: center;
+}
+
+/* Каждая буква заголовка — отдельный span. Начальный цвет — #DFDFDF */
+.letter {
+  color: #DFDFDF;
+  transition: color 0.4s ease;
+}
+
+/* Обычная буква после «зажигания» становится белой */
+.letter.is-lit {
+  color: #FFFFFF;
+}
+
+/* Буква из выделенного слова после «зажигания» становится красной */
+.letter.is-accent.is-lit {
+  color: #FF0000;
+}
+
+/* Слово целиком не переносится по буквам на новую строку */
+.word {
+  white-space: nowrap;
+}
